@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Carregar o perfil global
+source /etc/profile
+
 # Diretório de trabalho
 cd /tmp
 
@@ -18,12 +21,8 @@ apt-get update
 # Instalar apenas a atualização do pacote zabbix-proxy-mysql
 apt-get install --only-upgrade -y zabbix-proxy-mysql
 
-# Solicitar a interação do operador para não substituir arquivos de configuração
-read -p "Deseja manter os arquivos de configuração da versão anterior? (N/s): " response
-if [[ "$response" =~ ^[Nn]$ ]]; then
-    # Se a resposta for 'N' ou 'n', forçar a reinstalação do pacote
-    apt-get install --only-upgrade -y --reinstall zabbix-proxy-mysql
-fi
+# Forçar a reinstalação do pacote sem substituir os arquivos de configuração
+echo "N" | apt-get install --only-upgrade -y --reinstall zabbix-proxy-mysql
 
 # Iniciar o serviço do Zabbix Proxy
 systemctl start zabbix-proxy
